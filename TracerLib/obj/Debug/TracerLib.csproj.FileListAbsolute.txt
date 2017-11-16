@@ -1,0 +1,10 @@
+F:\dotNet\GodelLabs\Lab2\RemakeTracer\TracerProject\TracerProject\TracerLib\bin\Debug\TracerLib.dll
+F:\dotNet\GodelLabs\Lab2\RemakeTracer\TracerProject\TracerProject\TracerLib\bin\Debug\TracerLib.pdb
+F:\dotNet\GodelLabs\Lab2\RemakeTracer\TracerProject\TracerProject\TracerLib\obj\Debug\TracerLib.csprojResolveAssemblyReference.cache
+F:\dotNet\GodelLabs\Lab2\RemakeTracer\TracerProject\TracerProject\TracerLib\obj\Debug\TracerLib.dll
+F:\dotNet\GodelLabs\Lab2\RemakeTracer\TracerProject\TracerProject\TracerLib\obj\Debug\TracerLib.pdb
+C:\Users\m.batsian\Desktop\TracerProject\TracerLib\bin\Debug\TracerLib.dll
+C:\Users\m.batsian\Desktop\TracerProject\TracerLib\bin\Debug\TracerLib.pdb
+C:\Users\m.batsian\Desktop\TracerProject\TracerLib\obj\Debug\TracerLib.csproj.CoreCompileInputs.cache
+C:\Users\m.batsian\Desktop\TracerProject\TracerLib\obj\Debug\TracerLib.dll
+C:\Users\m.batsian\Desktop\TracerProject\TracerLib\obj\Debug\TracerLib.pdb
