@@ -1,0 +1,10 @@
+C:\Users\m.batsian\Desktop\TracerProject\FormatterPluginLoader\bin\Debug\FormatterPluginLoader.dll
+C:\Users\m.batsian\Desktop\TracerProject\FormatterPluginLoader\bin\Debug\FormatterPluginLoader.pdb
+C:\Users\m.batsian\Desktop\TracerProject\FormatterPluginLoader\bin\Debug\FormatterContract.dll
+C:\Users\m.batsian\Desktop\TracerProject\FormatterPluginLoader\bin\Debug\TracerLib.dll
+C:\Users\m.batsian\Desktop\TracerProject\FormatterPluginLoader\bin\Debug\FormatterContract.pdb
+C:\Users\m.batsian\Desktop\TracerProject\FormatterPluginLoader\bin\Debug\TracerLib.pdb
+C:\Users\m.batsian\Desktop\TracerProject\FormatterPluginLoader\obj\Debug\FormatterPluginLoader.csprojResolveAssemblyReference.cache
+C:\Users\m.batsian\Desktop\TracerProject\FormatterPluginLoader\obj\Debug\FormatterPluginLoader.csproj.CoreCompileInputs.cache
+C:\Users\m.batsian\Desktop\TracerProject\FormatterPluginLoader\obj\Debug\FormatterPluginLoader.dll
+C:\Users\m.batsian\Desktop\TracerProject\FormatterPluginLoader\obj\Debug\FormatterPluginLoader.pdb

@@ -58,6 +58,10 @@
       <Project>{ef84a5a5-8e50-4049-8676-cc3010b5696d}</Project>
       <Name>JsonFormatter</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Result\Result.csproj">
+      <Project>{a66c48bc-df4d-4f86-a875-0533b533a4f6}</Project>
+      <Name>Result</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TracerLib\TracerLib.csproj">
       <Project>{377df01d-5935-49d9-974e-1f9a6fcb2887}</Project>
       <Name>TracerLib</Name>

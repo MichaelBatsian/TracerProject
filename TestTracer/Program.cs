@@ -9,19 +9,23 @@ using TracerLib.TracerImpl;
 using XmlFormatter;
 using JsonFormatter;
 using  YamlFormatter;
+using  Result;
 
 
 namespace TestTracer
 {
     class Program
     {
+        private const string PathToJson = @"C:\Users\m.batsian\Desktop\TracerProject\JsonFormatter\bin\Debug\JsonFormatter.dll";
+        private const string PathToYaml = @"C:\Users\m.batsian\Desktop\TracerProject\YamlFormatter\bin\Debug\YamlFormatter.dll";
+
         [STAThread]
         static void Main(string[] args)
         {
             var p = new Program();
             Tracer tracer = Tracer.GetTracer();
             p.RunTestMethods(tracer);
-            p.ConsoleInterface(tracer,args);
+            p.ConsoleInterface(tracer, args);
             Console.ReadKey();
         }
 
@@ -31,8 +35,9 @@ namespace TestTracer
             MethodLevel3(5, rootNode.AddChild());
         }
 
-        public void ConsoleInterface(Tracer tracer,string []args)
+        public void ConsoleInterface(Tracer tracer, string [] args)
         {
+            FormatResult result = new FormatResult(tracer);
             if (args.Length > 0)
             {
                 switch (args[0])
@@ -40,28 +45,42 @@ namespace TestTracer
                     case "--o":
                         break;
                     case "--f":
-                        Console.WriteLine("Choose format:");
-                        Console.WriteLine("1-console view");
-                        Console.WriteLine("2-xml format");
-                        Console.WriteLine("3-json");
-                        string format = Console.ReadLine();
-                        switch (format)
+                        bool exit = true;
+                        while (exit)
                         {
-                            case "1":
-                                tracer.GetTraceResult().ToConsole();
-                                break;
-                            case "2":
-                                tracer.GetTraceResult().ToXml();
-                                break;
-                            case "3":
-                                tracer.GetTraceResult().ToJson();
-                                break;
-                            case "4":
-                                tracer.GetTraceResult().ToYaml();
-                                break;
-                            default:
-                                Console.WriteLine("Choose right command");
-                            break;
+                            Console.WriteLine("Choose format:");
+                            Console.WriteLine("1 - console view");
+                            Console.WriteLine("2 - xml format");
+                            Console.WriteLine("3 - json");
+                            Console.WriteLine("4 - yaml");
+                            Console.WriteLine("5 - exit");
+                            string format = Console.ReadLine();
+                     
+                                switch (format)
+                                {
+                                    case "1":
+                                        result.ToConsole();
+                                        Console.WriteLine("Done.");
+                                        break;
+                                    case "2":
+                                        result.ToXml();
+                                        Console.WriteLine("Done.");
+                                        break;
+                                    case "3":
+                                        result.ToJson(PathToJson);
+                                        Console.WriteLine("Done.");
+                                        break;
+                                    case "4":
+                                        result.ToYaml(PathToYaml);
+                                        Console.WriteLine("Done.");
+                                        break;
+                                    case "5":
+                                        exit = false;
+                                        break;
+                                    default:
+                                        Console.WriteLine("Choose right command");
+                                    break;
+                                }
                         }
                         break;
                     case "--h":
@@ -72,7 +91,6 @@ namespace TestTracer
                         Console.WriteLine("2-xml format");
                         Console.WriteLine("3-json");
                         Console.WriteLine("4-json");
-
                         break;
                     default:
                         Console.WriteLine("This command is not defined for this application.");

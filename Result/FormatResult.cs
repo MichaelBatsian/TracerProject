@@ -5,11 +5,11 @@ using XmlFormatter;
 
 namespace Result
 {
-    public class TraceResult
+    public class FormatResult
     {
         private Tracer _tracer;
  
-        public TraceResult(Tracer tracer)
+        public FormatResult(Tracer tracer)
         {
             _tracer = tracer;
         }
@@ -21,27 +21,7 @@ namespace Result
 
         public void ToConsole()
         {
-            Action<Tracer, int, bool> action = (t, l, isR) =>
-            {
-                if (isR)
-                {
-                    return;
-                }
-                if (t.MethodInfo == null)
-                {
-                    return;
-                }
-                string result = "";
-
-                for (int i = 0; i < l; i++)
-                {
-                    result += " ";
-                }
-                result += t.MethodInfo.ToString();
-                Console.WriteLine(result);
-                l++;
-            };
-            _tracer.Traverse(_tracer, 0, true, action);
+            _tracer.Traverse(_tracer, 0, true);
         }
 
         public void ToXml()

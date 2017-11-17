@@ -4,17 +4,20 @@ using System.Diagnostics;
 using System.Linq;
 using TracerLib.Model;
 using TracerLib.TracerContract;
+using System.Threading;
+
 
 namespace TracerLib.TracerImpl
 {
     public class Tracer:ITracer
     {
-        public TracedMethodInfo MethodInfo { get; set; }
+        private static Tracer _tracer;
         private Stopwatch _timer;
+        private TraceResult traceResult = new TraceResult();
         public List<Tracer> Children { get; }
 
-        private static Tracer _tracer;
-
+        public TracedMethodInfo MethodInfo { get; set; }
+        
         private Tracer()
         {
             Children = new List<Tracer>();
@@ -54,42 +57,51 @@ namespace TracerLib.TracerImpl
             };
         }
 
-        //private void Traverse(Tracer tn, int level, bool isRoot)
-        //{
-        //    if (!isRoot)
-        //    {
-        //        if (tn.MethodInfo == null)
-        //        {
-        //            return;
-        //        }
-        //        string result = "";
-
-        //        for (int i = 0; i < level; i++)
-        //        {
-        //            result += " ";
-        //        }
-        //        result += tn.MethodInfo.ToString();
-        //        Console.WriteLine(result);
-        //        level++;
-        //    }
-        //    foreach (Tracer kid in tn.Children)
-        //    {
-        //        Traverse(kid, level, false);
-        //    }
-        //}
-
-        public void Traverse(Tracer tn, int level, bool isRoot, Action<Tracer,int, bool> action)
+        public void Traverse(Tracer tn, int level, bool isRoot)
         {
-            action(tn,level,isRoot);
+            if (!isRoot)
+            {
+                if (tn.MethodInfo == null)
+                {
+                    return;
+                }
+                string result = "";
+
+                for (int i = 0; i < level; i++)
+                {
+                    result += " ";
+                }
+                result += tn.MethodInfo.ToString();
+                Console.WriteLine(result);
+                level++;
+            }
             foreach (Tracer kid in tn.Children)
             {
-                Traverse(kid, level, false, action);
+                Traverse(kid, level, false);
+            }
+        }
+
+        public void Traverse(Tracer tn, bool isRoot)
+        {
+            if (!isRoot)
+            {
+                if (tn.MethodInfo == null)
+                {
+                    return;
+                }
+                traceResult.ThreadTime += tn.MethodInfo.MsTime;
+            }
+            foreach (Tracer kid in tn.Children)
+            {
+                Traverse(kid, false);
             }
         }
 
         public TraceResult GetTraceResult()
         {
-            return new TraceResult(_tracer,true);
+            Traverse(_tracer, true);
+            traceResult.ThreadId = Thread.CurrentThread.ManagedThreadId;
+            return traceResult;
         }
     }
 }

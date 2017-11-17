@@ -18,19 +18,23 @@ namespace XmlFormatter
         public void Format(Tracer tracer, int level, bool isRoot)
         {
            
-                SaveFileDialog saveFileDial = new SaveFileDialog
-                {
-                    Filter = "XML Files (*.xml)|*.xml|All Files (*.*)|*.*",
-                    FileName = "TracerXml"
-                };
+            SaveFileDialog saveFileDial = new SaveFileDialog
+            {
+                Filter = "XML Files (*.xml)|*.xml|All Files (*.*)|*.*",
+                FileName = "TracerXml"
+            };
 
-                if (saveFileDial.ShowDialog() != DialogResult.OK)
-                {
-                    return;
-                }
-                XDocument document = new XDocument();
-                document.Add(GetXml(tracer,0,true));
-                document.Save(saveFileDial.FileName);
+            if (saveFileDial.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+            XDocument document = new XDocument();
+            XElement traceResult = new XElement("thread");
+            traceResult.Add(new XAttribute("id",tracer.GetTraceResult().ThreadId));
+            traceResult.Add(new XAttribute("time", tracer.GetTraceResult().ThreadTime));
+            traceResult.Add(GetXml(tracer, 0, true));
+            document.Add(traceResult);
+            document.Save(saveFileDial.FileName);
            
         }
 
