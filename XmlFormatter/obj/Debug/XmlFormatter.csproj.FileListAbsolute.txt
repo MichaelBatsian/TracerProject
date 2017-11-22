@@ -27,3 +27,13 @@ C:\Users\m.batsian\Desktop\study\backUp17.11\TracerProject-rebuildInterface\Trac
 C:\Users\m.batsian\Desktop\study\backUp17.11\TracerProject-rebuildInterface\TracerProject-rebuildInterface\XmlFormatter\obj\Debug\XmlFormatter.csproj.CoreCompileInputs.cache
 C:\Users\m.batsian\Desktop\study\backUp17.11\TracerProject-rebuildInterface\TracerProject-rebuildInterface\XmlFormatter\obj\Debug\XmlFormatter.dll
 C:\Users\m.batsian\Desktop\study\backUp17.11\TracerProject-rebuildInterface\TracerProject-rebuildInterface\XmlFormatter\obj\Debug\XmlFormatter.pdb
+C:\Users\m.batsian\Desktop\study\Labs\Lab2\TracerProject\TracerProject\XmlFormatter\bin\Debug\XmlFormatter.dll
+C:\Users\m.batsian\Desktop\study\Labs\Lab2\TracerProject\TracerProject\XmlFormatter\bin\Debug\XmlFormatter.pdb
+C:\Users\m.batsian\Desktop\study\Labs\Lab2\TracerProject\TracerProject\XmlFormatter\bin\Debug\FormatterContract.dll
+C:\Users\m.batsian\Desktop\study\Labs\Lab2\TracerProject\TracerProject\XmlFormatter\bin\Debug\TracerLib.dll
+C:\Users\m.batsian\Desktop\study\Labs\Lab2\TracerProject\TracerProject\XmlFormatter\bin\Debug\FormatterContract.pdb
+C:\Users\m.batsian\Desktop\study\Labs\Lab2\TracerProject\TracerProject\XmlFormatter\bin\Debug\TracerLib.pdb
+C:\Users\m.batsian\Desktop\study\Labs\Lab2\TracerProject\TracerProject\XmlFormatter\obj\Debug\XmlFormatter.csprojResolveAssemblyReference.cache
+C:\Users\m.batsian\Desktop\study\Labs\Lab2\TracerProject\TracerProject\XmlFormatter\obj\Debug\XmlFormatter.csproj.CoreCompileInputs.cache
+C:\Users\m.batsian\Desktop\study\Labs\Lab2\TracerProject\TracerProject\XmlFormatter\obj\Debug\XmlFormatter.dll
+C:\Users\m.batsian\Desktop\study\Labs\Lab2\TracerProject\TracerProject\XmlFormatter\obj\Debug\XmlFormatter.pdb

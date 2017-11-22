@@ -13,3 +13,9 @@ C:\Users\m.batsian\Desktop\study\backUp17.11\TracerProject-rebuildInterface\Trac
 C:\Users\m.batsian\Desktop\study\backUp17.11\TracerProject-rebuildInterface\TracerProject-rebuildInterface\TracerLib\obj\Debug\TracerLib.csproj.CoreCompileInputs.cache
 C:\Users\m.batsian\Desktop\study\backUp17.11\TracerProject-rebuildInterface\TracerProject-rebuildInterface\TracerLib\obj\Debug\TracerLib.dll
 C:\Users\m.batsian\Desktop\study\backUp17.11\TracerProject-rebuildInterface\TracerProject-rebuildInterface\TracerLib\obj\Debug\TracerLib.pdb
+C:\Users\m.batsian\Desktop\study\Labs\Lab2\TracerProject\TracerProject\TracerLib\bin\Debug\TracerLib.dll
+C:\Users\m.batsian\Desktop\study\Labs\Lab2\TracerProject\TracerProject\TracerLib\bin\Debug\TracerLib.pdb
+C:\Users\m.batsian\Desktop\study\Labs\Lab2\TracerProject\TracerProject\TracerLib\obj\Debug\TracerLib.csproj.CoreCompileInputs.cache
+C:\Users\m.batsian\Desktop\study\Labs\Lab2\TracerProject\TracerProject\TracerLib\obj\Debug\TracerLib.dll
+C:\Users\m.batsian\Desktop\study\Labs\Lab2\TracerProject\TracerProject\TracerLib\obj\Debug\TracerLib.pdb
+C:\Users\m.batsian\Desktop\study\Labs\Lab2\TracerProject\TracerProject\TracerLib\obj\Debug\TracerLib.csprojResolveAssemblyReference.cache

@@ -30,6 +30,7 @@ namespace TestTracer
         public void ConsoleInterface(Tracer tracer, string [] args)
         {
             FormatResult result = new FormatResult(tracer);
+            
             if (args.Length > 0)
             {
                 switch (args[0])
@@ -56,11 +57,11 @@ namespace TestTracer
                                     Console.WriteLine("Done.");
                                     break;
                                 case "3":
-                                    result.ToJson(GetPath("\\JsonFormatter\\bin\\Debug\\JsonFormatter.dll"));
+                                    result.ToJson("\\JsonFormatter\\bin\\Debug\\JsonFormatter.dll");
                                     Console.WriteLine("Done.");
                                     break;
                                 case "4":
-                                    result.ToYaml(GetPath("\\YamlFormatter\\bin\\Debug\\YamlFormatter.dll"));
+                                    result.ToYaml("\\YamlFormatter\\bin\\Debug\\YamlFormatter.dll");
                                     Console.WriteLine("Done.");
                                     break;
                                 case "5":
@@ -114,14 +115,6 @@ namespace TestTracer
             parent.StopTrace();
         }
 
-        //method to identify path to plugin
-        static string GetPath(string pathTodll)
-        {
-            string assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string[] path = assemblyPath.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
-            string[] newPath = new string[path.Length - 3];
-            Array.Copy(path, newPath, path.Length - 3);
-            return String.Join("\\", newPath) + pathTodll;
-        }
+        
     }
 }

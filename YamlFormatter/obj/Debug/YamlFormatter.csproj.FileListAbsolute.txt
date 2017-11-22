@@ -18,3 +18,13 @@ C:\Users\m.batsian\Desktop\study\backUp17.11\TracerProject-rebuildInterface\Trac
 C:\Users\m.batsian\Desktop\study\backUp17.11\TracerProject-rebuildInterface\TracerProject-rebuildInterface\YamlFormatter\obj\Debug\YamlFormatter.csproj.CoreCompileInputs.cache
 C:\Users\m.batsian\Desktop\study\backUp17.11\TracerProject-rebuildInterface\TracerProject-rebuildInterface\YamlFormatter\obj\Debug\YamlFormatter.dll
 C:\Users\m.batsian\Desktop\study\backUp17.11\TracerProject-rebuildInterface\TracerProject-rebuildInterface\YamlFormatter\obj\Debug\YamlFormatter.pdb
+C:\Users\m.batsian\Desktop\study\Labs\Lab2\TracerProject\TracerProject\YamlFormatter\bin\Debug\YamlFormatter.dll
+C:\Users\m.batsian\Desktop\study\Labs\Lab2\TracerProject\TracerProject\YamlFormatter\bin\Debug\YamlFormatter.pdb
+C:\Users\m.batsian\Desktop\study\Labs\Lab2\TracerProject\TracerProject\YamlFormatter\bin\Debug\FormatterContract.dll
+C:\Users\m.batsian\Desktop\study\Labs\Lab2\TracerProject\TracerProject\YamlFormatter\bin\Debug\TracerLib.dll
+C:\Users\m.batsian\Desktop\study\Labs\Lab2\TracerProject\TracerProject\YamlFormatter\bin\Debug\FormatterContract.pdb
+C:\Users\m.batsian\Desktop\study\Labs\Lab2\TracerProject\TracerProject\YamlFormatter\bin\Debug\TracerLib.pdb
+C:\Users\m.batsian\Desktop\study\Labs\Lab2\TracerProject\TracerProject\YamlFormatter\obj\Debug\YamlFormatter.csprojResolveAssemblyReference.cache
+C:\Users\m.batsian\Desktop\study\Labs\Lab2\TracerProject\TracerProject\YamlFormatter\obj\Debug\YamlFormatter.csproj.CoreCompileInputs.cache
+C:\Users\m.batsian\Desktop\study\Labs\Lab2\TracerProject\TracerProject\YamlFormatter\obj\Debug\YamlFormatter.dll
+C:\Users\m.batsian\Desktop\study\Labs\Lab2\TracerProject\TracerProject\YamlFormatter\obj\Debug\YamlFormatter.pdb
