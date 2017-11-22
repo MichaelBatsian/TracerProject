@@ -1,9 +1,11 @@
-﻿using TracerLib.TracerImpl;
+﻿using TracerLib.TracerContract;
+using TracerLib.TracerImpl;
+
 
 namespace FormatterContract
 {
-    public interface IFormatter
+    public interface IFormatter<T>
     {
-        void Format(Tracer tracer, int level,bool isRoot);
+        void Format(TreeNode<T> tree, ITracer tracer, int level,bool isRoot);
     }
 }

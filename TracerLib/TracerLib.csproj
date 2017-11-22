@@ -44,7 +44,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TracerContract\ITracer.cs" />
     <Compile Include="TracerImpl\Tracer.cs" />
+    <Compile Include="TracerImpl\TracerX.cs" />
     <Compile Include="Model\TraceResult.cs" />
+    <Compile Include="TracerImpl\TreeView.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

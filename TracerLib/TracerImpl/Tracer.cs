@@ -1,52 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.PerformanceData;
 using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using TracerLib.Model;
 using TracerLib.TracerContract;
-using System.Threading;
-
 
 namespace TracerLib.TracerImpl
 {
     public class Tracer:ITracer
     {
+     
+        private TreeNode<TracedMethodInfo> _tree;
+        private TreeNode<TracedMethodInfo> _current;
+        private Stack<TreeNode<TracedMethodInfo>> _methodsStack;
+
         private static Tracer _tracer;
 
-        private Stopwatch _timer;
-        private TraceResult traceResult = new TraceResult();
-        public List<Tracer> Children { get; }
+        public static Tracer GetInstance()
+        {
+            if (_tracer == null)
+            {
+                return new Tracer();
+            }
+            return _tracer;
+        }
 
-        public TracedMethodInfo MethodInfo { get; set; }
-        
+        public TreeNode<TracedMethodInfo> GetTree()
+        {
+            return _tree;
+        }
+
+
         private Tracer()
         {
-            Children = new List<Tracer>();
-        }
-
-        public static Tracer GetTracer()
-        {
-            return _tracer ?? (_tracer = new Tracer());
-        }
-
-        public Tracer AddChild()
-        {
-            var node = new Tracer();
-            Children.Add(node);
-            return node;
+            _tree = new TreeNode<TracedMethodInfo>();
+            _methodsStack = new Stack<TreeNode<TracedMethodInfo>>();
+            _current = _tree;
         }
 
         public void StartTrace()
         {
-            _timer = Stopwatch.StartNew();
-        }
-
-        public void StopTrace()
-        {
-            _timer.Stop();
             StackTrace st = new StackTrace();
             var invokationFrame = (st.GetFrames())[1];
-            MethodInfo = new TracedMethodInfo
+            var info = new TracedMethodInfo
             {
                 ClassName = invokationFrame.GetMethod().DeclaringType.Name,
                 MethodName = invokationFrame.GetMethod().Name,
@@ -54,64 +54,40 @@ namespace TracerLib.TracerImpl
                     .GetMethod()
                     .GetParameters()
                     .Count(),
-                MsTime = (int)_timer.ElapsedMilliseconds
+                Time = Stopwatch.StartNew()
             };
+            _current = _current.AddChild(info);
+            _methodsStack.Push(_current);
         }
 
-        public void Traverse(Tracer tn, int level, bool isRoot)
+        public void StopTrace()
         {
-            if (!isRoot)
-            {
-                if (tn.MethodInfo == null)
-                {
-                    return;
-                }
-                string result = "";
-
-                for (int i = 0; i < level; i++)
-                {
-                    result += " ";
-                }
-                result += tn.MethodInfo.ToString();
-                if (level == 0)
-                {
-                    traceResult.ThreadTime += tn.MethodInfo.MsTime;
-                }
-
-                Console.WriteLine(result);
-                level++;
-            }
-            foreach (Tracer kid in tn.Children)
-            {
-                Traverse(kid, level, false);
-            }
-            if (isRoot)
-            {
-                Console.WriteLine($"ThreadId: {Thread.CurrentThread.ManagedThreadId}, Thread time in ms:{traceResult.ThreadTime}");
-            }
-        }
-
-        public void Traverse(Tracer tn, bool isRoot)
-        {
-            if (!isRoot)
-            {
-                if (tn.MethodInfo == null)
-                {
-                    return;
-                }
-                traceResult.ThreadTime += tn.MethodInfo.MsTime;
-            }
-            foreach (Tracer kid in tn.Children)
-            {
-                Traverse(kid, false);
-            }
+            _methodsStack.Pop().Data.Time.Stop(); ;
+            _current = _methodsStack.Count==0 ? _tree : _methodsStack.Peek();
         }
 
         public TraceResult GetTraceResult()
         {
-            Traverse(_tracer, true);
-            traceResult.ThreadId = Thread.CurrentThread.ManagedThreadId;
-            return traceResult;
+            var tr = new TraceResult();
+            tr.ThreadId = Thread.CurrentThread.ManagedThreadId;
+            Traverse(_tree,tr,true);
+            return tr;
+        }
+
+        private void Traverse(TreeNode<TracedMethodInfo> tn,TraceResult tr, bool isRoot)
+        {
+            if (!isRoot)
+            {
+                if (tn.Data == null)
+                {
+                    return;
+                }
+                tr.ThreadTime += (int)tn.Data.Time.ElapsedMilliseconds;
+            }
+            foreach (var kid in tn.Children)
+            {
+                Traverse(kid,tr,false);
+            }
         }
     }
 }

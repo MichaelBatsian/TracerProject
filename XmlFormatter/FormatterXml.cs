@@ -3,19 +3,20 @@ using System.Xml.Linq;
 using System.Reflection;
 using TracerLib.TracerImpl;
 using System.Windows.Forms;
+using TracerLib.TracerContract;
 
 namespace XmlFormatter
 {
-    public class FormatterXml:IFormatter
+    public class FormatterXml<T>:IFormatter<T>
     {
 
-        public void Format(Tracer tracer, int level, bool isRoot)
+        public void Format(TreeNode<T> _tree,ITracer tracer, int level, bool isRoot)
         {
            
             SaveFileDialog saveFileDial = new SaveFileDialog
             {
                 Filter = "XML Files (*.xml)|*.xml|All Files (*.*)|*.*",
-                FileName = "TracerXml"
+                FileName = "TraceResultXml"
             };
 
             if (saveFileDial.ShowDialog() != DialogResult.OK)
@@ -24,32 +25,36 @@ namespace XmlFormatter
             }
             XDocument document = new XDocument();
             XElement traceResult = new XElement("thread");
-            traceResult.Add(new XAttribute("id",tracer.GetTraceResult().ThreadId));
-            traceResult.Add(new XAttribute("time", tracer.GetTraceResult().ThreadTime));
-            traceResult.Add(GetXml(tracer, 0, true));
+            traceResult.Add(new XAttribute("id", tracer
+                                                .GetTraceResult()
+                                                .ThreadId));
+            traceResult.Add(new XAttribute("time", tracer
+                                                .GetTraceResult()
+                                                .ThreadTime));
+            traceResult.Add(GetXml(_tree, 0, true));
             document.Add(traceResult);
             document.Save(saveFileDial.FileName);
            
         }
 
-        private XElement GetXml(Tracer tracer, int level, bool isRoot)
+        private XElement GetXml(TreeNode<T> _tree, int level, bool isRoot)
         {
             XElement element = new XElement("root"); 
             if (!isRoot)
             {
-                if (tracer.MethodInfo == null)
+                if (_tree.Data == null)
                 {
                     return null;
                 }
-                PropertyInfo[] props = tracer.MethodInfo.GetType()
+                PropertyInfo[] props = _tree.Data.GetType()
                     .GetProperties(BindingFlags.Public | BindingFlags.Instance);
                 element = new XElement("method");
                 foreach (var prop in props)
                 {
-                    element.Add(new XAttribute(prop.Name, prop.GetValue(tracer.MethodInfo)));
+                    element.Add(new XAttribute(prop.Name, prop.GetValue(_tree.Data)));
                 }
             }
-            foreach (Tracer kid in tracer.Children)
+            foreach (TreeNode<T> kid in _tree.Children)
             {
                 element.Add(GetXml(kid, level, false));
             }

@@ -5,25 +5,26 @@ using TracerLib.TracerImpl;
 using System.Reflection;
 using System.Windows.Forms;
 using System.IO;
+using TracerLib.TracerContract;
 
 namespace YamlFormatter
 
 {
-    public class FormatterYaml:IFormatter
+    public class FormatterYaml<T>:IFormatter<T>
     {
   
-        public void Format(Tracer tracer, int level, bool isRoot)
+        public void Format(TreeNode<T> tree,ITracer tracer, int level, bool isRoot)
         {
             StringBuilder result = new StringBuilder("root:");
-            GetYaml(tracer, 0, true, result);
+            GetYaml(tree, 0, true, result);
             Save(result);
         }
-        private void GetYaml(Tracer tracer, int level, bool isRoot, StringBuilder result)
+        private void GetYaml(TreeNode<T> tree, int level, bool isRoot, StringBuilder result)
         {
             var countSpaces = new StringBuilder();
             if (!isRoot)
             {
-                if (tracer.MethodInfo == null)
+                if (tree.Data == null)
                 {
                     return;
                 }
@@ -33,7 +34,7 @@ namespace YamlFormatter
                     countSpaces.Append("   ");
                 }
 
-                PropertyInfo[] props = tracer.MethodInfo.GetType()
+                PropertyInfo[] props = tree.Data.GetType()
                     .GetProperties(BindingFlags.Public | BindingFlags.Instance);
                 result.Append("\r\n");
                 result.Append(countSpaces);
@@ -42,7 +43,7 @@ namespace YamlFormatter
                 foreach (var prop in props)
                 {
                     Type currentType = prop.PropertyType;
-                    var itemValue = prop.GetValue(tracer.MethodInfo, null);
+                    var itemValue = prop.GetValue(tree.Data, null);
                     result.AppendFormat("\r\n");
                     result.Append(countSpaces.ToString());
                     result.AppendFormat("       {0} : {1}", prop.Name,
@@ -51,7 +52,7 @@ namespace YamlFormatter
             }
             level++;
 
-            foreach (Tracer kid in tracer.Children)
+            foreach (var kid in tree.Children)
             {
                 GetYaml(kid, level, false, result);
             }

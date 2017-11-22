@@ -5,28 +5,29 @@ using TracerLib.TracerImpl;
 using System.Reflection;
 using System.Windows.Forms;
 using System.IO;
+using TracerLib.TracerContract;
 
 namespace JsonFormatter
 {
-    public class FormatterJson:IFormatter
+    public class FormatterJson<T>:IFormatter<T>
     {
 
-        public void Format(Tracer tracer, int level, bool isRoot)
+        public void Format(TreeNode<T> tree,ITracer tracer, int level, bool isRoot)
         {
             StringBuilder result = new StringBuilder("{\r\n \"root\": [\r\n  {");
-            GetJson(tracer, 0, true, result);
+            GetJson(tree, 0, true, result);
             result.Append("\r\n]\r\n}");
             Save(result);
 
             
         }
 
-        private void GetJson(Tracer tracer, int level, bool isRoot,StringBuilder result)
+        private void GetJson(TreeNode<T> tree, int level, bool isRoot,StringBuilder result)
         {
             var countSpaces = new StringBuilder("   ");
             if (!isRoot)
             {
-                if (tracer.MethodInfo == null)
+                if (tree.Data == null)
                 {
                     return;
                 }
@@ -35,7 +36,7 @@ namespace JsonFormatter
                 {
                     countSpaces.Append(" ");
                 }
-                PropertyInfo[] props = tracer.MethodInfo.GetType()
+                PropertyInfo[] props = tree.Data.GetType()
                     .GetProperties(BindingFlags.Public | BindingFlags.Instance);
                 result.Append("\r\n");
                 result.Append(countSpaces);
@@ -46,7 +47,7 @@ namespace JsonFormatter
                 foreach (var prop in props)
                 {
                     Type currentType = prop.PropertyType;
-                    var itemValue = prop.GetValue(tracer.MethodInfo, null);
+                    var itemValue = prop.GetValue(tree.Data, null);
                     bool prim = currentType.IsPrimitive;
                     result.AppendFormat("\r\n");
                     result.Append(countSpaces.ToString());
@@ -60,7 +61,7 @@ namespace JsonFormatter
             }
         
             level++;
-            foreach (Tracer kid in tracer.Children)
+            foreach (var kid in tree.Children)
             {
                 GetJson(kid, level, false,result);
             }

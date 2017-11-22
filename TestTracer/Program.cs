@@ -1,35 +1,40 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Threading;
+using FormatterContract;
 using TracerLib.TracerImpl;
 using  Result;
+using TracerLib.Model;
 
 
 namespace TestTracer
 {
     class Program
     {
+        private static Tracer tracer = Tracer.GetInstance();
 
         [STAThread]
         static void Main(string[] args)
         {
             var p = new Program();
-            Tracer tracer = Tracer.GetTracer();
-            p.RunTestMethods(tracer);
-            p.ConsoleInterface(tracer, args);
+            p.RunTestMethods();
+            //p.ConsoleInterface(args);
+            FormatResult<TracedMethodInfo> result = new FormatResult<TracedMethodInfo>(tracer.GetTree(), tracer);
             Console.ReadKey();
         }
 
-        public void RunTestMethods(Tracer rootNode)
+        private void RunTestMethods()
         {
-            MethodLevel1(rootNode.AddChild());
-            MethodLevel3(5, rootNode.AddChild());
+            MethodLevel1();
+            MethodLevel3(5);
+            MethodLevel2(5,3);
         }
 
-        public void ConsoleInterface(Tracer tracer, string [] args)
+        public void ConsoleInterface(string [] args)
         {
-            FormatResult result = new FormatResult(tracer);
+            FormatResult<TracedMethodInfo> result = new FormatResult<TracedMethodInfo>(tracer.GetTree(),tracer);
             if (args.Length > 0)
             {
                 switch (args[0])
@@ -56,11 +61,11 @@ namespace TestTracer
                                     Console.WriteLine("Done.");
                                     break;
                                 case "3":
-                                    result.ToJson(GetPath("\\JsonFormatter\\bin\\Debug\\JsonFormatter.dll"));
+                                    result.ToJson();
                                     Console.WriteLine("Done.");
                                     break;
                                 case "4":
-                                    result.ToYaml(GetPath("\\YamlFormatter\\bin\\Debug\\YamlFormatter.dll"));
+                                    result.ToYaml();
                                     Console.WriteLine("Done.");
                                     break;
                                 case "5":
@@ -87,41 +92,65 @@ namespace TestTracer
                 }
             }
         }
-            
+
+        public void ConsoleInterface2(string[] args)
+        {
+            FormatResult<TracedMethodInfo> result = new FormatResult<TracedMethodInfo>(tracer.GetTree(), tracer);
+            var plugins = result.GetPlugins();
+            var formatsNames = result.GetFormatsNames(plugins);
+            if (args.Length > 0)
+            {
+                switch (args[0])
+                {
+                    case "--f":
+                        string format = Console.ReadLine();
+                        result.ToSpecialFormat(plugins, format);
+                        if (args.Length == 4)
+                        {
+                            
+                        }
+                        break;
+                    case "--h":
+                        Console.WriteLine("--f - format to introduce tracer results");
+                        Console.WriteLine("--f [format] --o [path\\file name] - set the path to output in file");
+                        Console.WriteLine("formats:");
+                        foreach (var name in formatsNames)
+                        {
+                            Console.WriteLine(name);
+                        }
+                        break;
+                    default:
+                        Console.WriteLine("This command is not defined for this application.");
+                        Console.WriteLine("To view the list of commands choose key --h");
+                        break;
+                }
+            }
+        }
         /* Methods to test tracer work*/
-        public void MethodLevel1(Tracer parent)
+        public void MethodLevel1()
         {
-            parent.StartTrace();
+            tracer.StartTrace();
             Thread.Sleep(100);
-            MethodLevel2(1, 2, parent.AddChild());
-            MethodLevel3(5, parent.AddChild());
-            MethodLevel2(1, 2, parent.AddChild());
-            MethodLevel2(1, 2, parent.AddChild());
-            parent.StopTrace();
+            MethodLevel2(1, 2);
+            MethodLevel3(5);
+            MethodLevel3(5);
+            MethodLevel2(1, 2);
+            MethodLevel2(1, 2);
+            tracer.StopTrace();
         }
 
-        public void MethodLevel2(int a, int b, Tracer parent)
+        public void MethodLevel2(int a, int b)
         {
-            parent.StartTrace();
+            tracer.StartTrace();
             Thread.Sleep(250);
-            MethodLevel3(5, parent.AddChild());
-            parent.StopTrace();
+            MethodLevel3(5);
+            tracer.StopTrace();
         }
-        public void MethodLevel3(int a, Tracer parent)
+        public void MethodLevel3(int a)
         {
-            parent.StartTrace();
+            tracer.StartTrace();
             Thread.Sleep(150);
-            parent.StopTrace();
-        }
-
-        //method to identify path to plugin
-        static string GetPath(string pathTodll)
-        {
-            string assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string[] path = assemblyPath.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
-            string[] newPath = new string[path.Length - 3];
-            Array.Copy(path, newPath, path.Length - 3);
-            return String.Join("\\", newPath) + pathTodll;
+            tracer.StopTrace();
         }
     }
 }
