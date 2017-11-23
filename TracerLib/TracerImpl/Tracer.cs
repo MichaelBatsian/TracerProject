@@ -68,8 +68,7 @@ namespace TracerLib.TracerImpl
 
         public TraceResult GetTraceResult()
         {
-            var tr = new TraceResult();
-            tr.ThreadId = Thread.CurrentThread.ManagedThreadId;
+            var tr = new TraceResult {ThreadId = Thread.CurrentThread.ManagedThreadId};
             Traverse(_tree,tr,true);
             return tr;
         }

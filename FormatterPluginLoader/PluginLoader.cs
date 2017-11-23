@@ -86,7 +86,7 @@ namespace FormatterPluginLoader
                 ICollection<IFormatter<T>> plugins = new List<IFormatter<T>>(pluginTypes.Count);
                 foreach (Type type in pluginTypes)
                 {
-                    var t = pluginType.MakeGenericType(typeof(T));
+                    var t = type.MakeGenericType(typeof(T));
                     IFormatter <T> plugin = (IFormatter <T>)Activator.CreateInstance(t);
                     plugins.Add(plugin);
                 }

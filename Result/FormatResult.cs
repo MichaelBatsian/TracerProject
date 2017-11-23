@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using ConsoleFormatter;
 using FormatterContract;
 using TracerLib.TracerContract;
 using TracerLib.TracerImpl;
@@ -14,11 +15,9 @@ namespace Result
         private TreeNode<T> _tree;
         private ITracer _tracer;
 
-        public const string PathToJson = "\\JsonFormatter\\bin\\Debug\\JsonFormatter.dll";
+        public const string PathToJson = "\\JsonFormatter\\bin\\Debug\\JsonFormatter.dll"; 
         public const string PathToYaml = "\\YamlFormatter\\bin\\Debug\\YamlFormatter.dll";
         public const string PathToPlugins = "\\Plugins";
-
-
 
         public FormatResult(TreeNode<T> tree, ITracer tracer)
         {
@@ -26,50 +25,57 @@ namespace Result
             _tracer = tracer;
         }
 
-        public void ToJson()
+        public void ToJson(string savePath)
         {
-            InvokePluginFormatter(PathToJson);
+            InvokePluginFormatter(PathToJson, savePath);
         }
 
-        public void ToConsole()
+        public void ToConsole(string output=null)
         {
-            _tree.Traverse(_tree, 0, true);
+            new FormatterConsole<T>().Format(_tree, _tracer, 0, true, output);
         }
 
-        public void ToXml()
+        public void ToXml(string savePath)
         {
-           new FormatterXml<T>().Format(_tree, _tracer, 0, true);
+           new FormatterXml<T>().Format(_tree, _tracer, 0, true, savePath);
         }
 
-        public void ToYaml()
+        public void ToYaml(string savePath)
         {
-            InvokePluginFormatter(PathToYaml);
+            InvokePluginFormatter(PathToYaml, savePath);
         }
-        //разобраться с xml
-        public string ToSpecialFormat(ICollection<IFormatter<T>> plugins, string formatName)
+       
+        public string ToSpecialFormat(ICollection<IFormatter<T>> plugins, string formatName, string output)
         {
+            string result = null;
             switch (formatName)
             {
                 case "console":
-                    ToConsole();
+                    ToConsole(output);
+                    result = formatName;
                     break;
                 case "xml":
-                    ToXml();
+                    ToXml(output);
+                    result = formatName;
                     break;
                 default:
                     string pathToPlugins = FormatResult<T>.GetAbsolutePath("Plugins");
+                    if (plugins.Count == 0)
+                    {
+                        break;
+                    }
                     foreach (var plugin in plugins)
                     {
                         Type type = plugin.GetType();
-                        if (type.Name.Contains(formatName))
+                        if (type.Name.ToLower().Contains(formatName))
                         {
-                            plugin.Format(_tree, _tracer, 0, true);
+                            plugin.Format(_tree, _tracer, 0, true, output);
                             return formatName;
                         }
                     }
                     break;
             }
-            return null;
+            return result;
         }
 
         public List<string> GetFormatsNames(ICollection<IFormatter<T>> plugins)
@@ -77,11 +83,11 @@ namespace Result
             List<string> names = new List<string> {"xml"};
             foreach (var plugin in plugins)
             {
-                if (plugin.GetType().Name.Contains("json"))
+                if (plugin.GetType().Name.Contains("Json"))
                 {
                     names.Add("json");
                 }
-                if (plugin.GetType().Name.Contains("yaml"))
+                if (plugin.GetType().Name.Contains("Yaml"))
                 {
                     names.Add("yaml");
                 }
@@ -100,10 +106,10 @@ namespace Result
             return FormatterPluginLoader.PluginLoader.LoadPlugins<T>(GetAbsolutePath(PathToPlugins));
         }
 
-        private void InvokePluginFormatter(string path)
+        private void InvokePluginFormatter(string path,string savePath)
         {
             IFormatter<T> formatter = GetPlugin(GetAbsolutePath(path));
-            formatter.Format(_tree, _tracer, 0, true);
+            formatter.Format(_tree, _tracer, 0, true, savePath);
         }
 
         public static string GetAbsolutePath(string relativePath)

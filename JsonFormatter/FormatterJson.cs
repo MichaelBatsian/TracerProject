@@ -12,14 +12,12 @@ namespace JsonFormatter
     public class FormatterJson<T>:IFormatter<T>
     {
 
-        public void Format(TreeNode<T> tree,ITracer tracer, int level, bool isRoot)
+        public void Format(TreeNode<T> tree,ITracer tracer, int level, bool isRoot,string  savePath)
         {
             StringBuilder result = new StringBuilder("{\r\n \"root\": [\r\n  {");
             GetJson(tree, 0, true, result);
             result.Append("\r\n]\r\n}");
-            Save(result);
-
-            
+            Save(result, savePath);
         }
 
         private void GetJson(TreeNode<T> tree, int level, bool isRoot,StringBuilder result)
@@ -71,19 +69,9 @@ namespace JsonFormatter
             result.AppendFormat("\r\n{0} ]",countSpaces);
         }
 
-        private void Save(StringBuilder obj)
+        private void Save(StringBuilder obj, string savePath)
         {
-            SaveFileDialog saveFileDial = new SaveFileDialog
-            {
-                Filter = "Json Files (*.json)|*.json|All Files (*.*)|*.*",
-                FileName = "Json"
-            };
-
-            if (saveFileDial.ShowDialog() != DialogResult.OK)
-            {
-                return;
-            }
-            using (var sw = new StreamWriter(saveFileDial.FileName))
+            using (var sw = new StreamWriter(savePath))
             {
                 sw.Write(obj.ToString());
             }

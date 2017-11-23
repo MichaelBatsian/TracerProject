@@ -1,4 +1,5 @@
-﻿using FormatterContract;
+﻿using System.IO;
+using FormatterContract;
 using System.Xml.Linq;
 using System.Reflection;
 using TracerLib.TracerImpl;
@@ -10,19 +11,8 @@ namespace XmlFormatter
     public class FormatterXml<T>:IFormatter<T>
     {
 
-        public void Format(TreeNode<T> _tree,ITracer tracer, int level, bool isRoot)
+        public void Format(TreeNode<T> _tree,ITracer tracer, int level, bool isRoot, string pathToSave)
         {
-           
-            SaveFileDialog saveFileDial = new SaveFileDialog
-            {
-                Filter = "XML Files (*.xml)|*.xml|All Files (*.*)|*.*",
-                FileName = "TraceResultXml"
-            };
-
-            if (saveFileDial.ShowDialog() != DialogResult.OK)
-            {
-                return;
-            }
             XDocument document = new XDocument();
             XElement traceResult = new XElement("thread");
             traceResult.Add(new XAttribute("id", tracer
@@ -33,8 +23,8 @@ namespace XmlFormatter
                                                 .ThreadTime));
             traceResult.Add(GetXml(_tree, 0, true));
             document.Add(traceResult);
-            document.Save(saveFileDial.FileName);
-           
+            document.Save(pathToSave);
+          
         }
 
         private XElement GetXml(TreeNode<T> _tree, int level, bool isRoot)
