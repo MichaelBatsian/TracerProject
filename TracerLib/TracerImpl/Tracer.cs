@@ -17,6 +17,9 @@ namespace TracerLib.TracerImpl
         private TreeNode<TracedMethodInfo> _tree;
         private TreeNode<TracedMethodInfo> _current;
         private Stack<TreeNode<TracedMethodInfo>> _methodsStack;
+        private Dictionary<ThreadInfo<TracedMethodInfo>, Stack<TreeNode<TracedMethodInfo>>> _thread;
+
+        static object locker = new object();
 
         private static Tracer _tracer;
 
@@ -40,6 +43,9 @@ namespace TracerLib.TracerImpl
             _tree = new TreeNode<TracedMethodInfo>();
             _methodsStack = new Stack<TreeNode<TracedMethodInfo>>();
             _current = _tree;
+
+            //thread extension
+            _thread = new Dictionary<ThreadInfo<TracedMethodInfo>, Stack<TreeNode<TracedMethodInfo>>>();
         }
 
         public void StartTrace()
@@ -56,13 +62,23 @@ namespace TracerLib.TracerImpl
                     .Count(),
                 Time = Stopwatch.StartNew()
             };
+
+            int threadId = Thread.CurrentThread.ManagedThreadId;
+
+            _thread
+                .Keys
+                .Select(t => t.ThreadId)
+                .Where(id =>id==threadId);
+
+
+
             _current = _current.AddChild(info);
             _methodsStack.Push(_current);
         }
 
         public void StopTrace()
         {
-            _methodsStack.Pop().Data.Time.Stop(); ;
+            _methodsStack.Pop().Data.Time.Stop(); 
             _current = _methodsStack.Count==0 ? _tree : _methodsStack.Peek();
         }
 

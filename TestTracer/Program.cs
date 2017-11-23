@@ -9,9 +9,11 @@ using TracerLib.Model;
 
 namespace TestTracer
 {
+
     public class Program
     {
         private static Tracer tracer = Tracer.GetInstance();
+
 
         static void Main(string[] args)
         {
@@ -19,6 +21,7 @@ namespace TestTracer
             bool first = true;
             var p = new Program();
             p.RunTestMethods();
+            new Thread(()=>p.RunTestMethods()).Start();
 
             while (run)
             {
