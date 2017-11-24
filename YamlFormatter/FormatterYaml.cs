@@ -34,7 +34,7 @@ namespace YamlFormatter
 
                 var props = tree.Data.GetType()
                     .GetProperties(BindingFlags.Public | BindingFlags.Instance);
-                result.Append("\r\n");
+                result.Append(Environment.NewLine);
                 result.Append(countSpaces);
                 result.Append(" - Method:");
 
@@ -42,7 +42,7 @@ namespace YamlFormatter
                 {
                     var currentType = prop.PropertyType;
                     var itemValue = prop.GetValue(tree.Data, null);
-                    result.AppendFormat("\r\n");
+                    result.AppendFormat(Environment.NewLine);
                     result.Append(countSpaces.ToString());
                     result.AppendFormat("       {0} : {1}", prop.Name,
                         itemValue);

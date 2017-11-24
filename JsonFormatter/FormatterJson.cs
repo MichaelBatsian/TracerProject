@@ -14,9 +14,12 @@ namespace JsonFormatter
 
         public void Format(TreeNode<T> tree,ITracer tracer, int level, bool isRoot,string  savePath)
         {
-            var result = new StringBuilder("{\r\n \"root\": [\r\n  {");
+            var result = new StringBuilder("{");
+            result.AppendFormat($"{Environment.NewLine}+ \"root\": [{Environment.NewLine}");
+            result.Append("  {");
             GetJson(tree, 0, true, result);
-            result.Append("\r\n]\r\n}");
+            result.Append($"{Environment.NewLine}]{Environment.NewLine}");
+            result.Append("}");
             Save(result, savePath);
         }
 
@@ -36,10 +39,10 @@ namespace JsonFormatter
                 }
                 var props = tree.Data.GetType()
                     .GetProperties(BindingFlags.Public | BindingFlags.Instance);
-                result.Append("\r\n");
+                result.Append(Environment.NewLine);
                 result.Append(countSpaces);
                 result.Append(" \"Method\":[");
-                result.AppendFormat("\r\n{0}", countSpaces);
+                result.AppendFormat($"{Environment.NewLine}{countSpaces}");
                 result.Append(" {");
                 result.Append(countSpaces);
                 foreach (var prop in props)
@@ -47,7 +50,7 @@ namespace JsonFormatter
                     var currentType = prop.PropertyType;
                     var itemValue = prop.GetValue(tree.Data, null);
                     var prim = currentType.IsPrimitive;
-                    result.AppendFormat("\r\n");
+                    result.Append(Environment.NewLine);
                     result.Append(countSpaces.ToString());
                     result.AppendFormat(prop.PropertyType.Name.Equals("Int32")
                         ||prop.PropertyType.Name.Equals("Double")
@@ -55,18 +58,15 @@ namespace JsonFormatter
                         ||prop.PropertyType.Name.Equals("Decimal") ? "  \"{0}\": {1}" : "  \"{0}\": \"{1}\"", prop.Name,
                         itemValue);
                 }
-                
             }
-        
             level++;
             foreach (var kid in tree.Children)
             {
                 GetJson(kid, level, false,result);
             }
-            result.AppendFormat("\r\n{0}",countSpaces);
+            result.AppendFormat($"{Environment.NewLine}{countSpaces}");
             result.Append(" },");
-
-            result.AppendFormat("\r\n{0} ]",countSpaces);
+            result.AppendFormat($"{Environment.NewLine}{countSpaces} ]");
         }
 
         private void Save(StringBuilder obj, string savePath)

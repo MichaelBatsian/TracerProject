@@ -29,7 +29,6 @@ namespace TracerLib.TracerImpl
             return _tree;
         }
 
-
         private Tracer()
         {
             _tree = new TreeNode<TracedMethodInfo>();
