@@ -13,8 +13,8 @@ namespace XmlFormatter
 
         public void Format(TreeNode<T> _tree,ITracer tracer, int level, bool isRoot, string pathToSave)
         {
-            XDocument document = new XDocument();
-            XElement traceResult = new XElement("thread");
+            var document = new XDocument();
+            var traceResult = new XElement("thread");
             traceResult.Add(new XAttribute("id", tracer
                                                 .GetTraceResult()
                                                 .ThreadId));
@@ -29,14 +29,14 @@ namespace XmlFormatter
 
         private XElement GetXml(TreeNode<T> _tree, int level, bool isRoot)
         {
-            XElement element = new XElement("root"); 
+            var element = new XElement("root"); 
             if (!isRoot)
             {
                 if (_tree.Data == null)
                 {
                     return null;
                 }
-                PropertyInfo[] props = _tree.Data.GetType()
+                var props = _tree.Data.GetType()
                     .GetProperties(BindingFlags.Public | BindingFlags.Instance);
                 element = new XElement("method");
                 foreach (var prop in props)
@@ -44,7 +44,7 @@ namespace XmlFormatter
                     element.Add(new XAttribute(prop.Name, prop.GetValue(_tree.Data)));
                 }
             }
-            foreach (TreeNode<T> kid in _tree.Children)
+            foreach (var kid in _tree.Children)
             {
                 element.Add(GetXml(kid, level, false));
             }

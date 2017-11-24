@@ -14,7 +14,7 @@ namespace JsonFormatter
 
         public void Format(TreeNode<T> tree,ITracer tracer, int level, bool isRoot,string  savePath)
         {
-            StringBuilder result = new StringBuilder("{\r\n \"root\": [\r\n  {");
+            var result = new StringBuilder("{\r\n \"root\": [\r\n  {");
             GetJson(tree, 0, true, result);
             result.Append("\r\n]\r\n}");
             Save(result, savePath);
@@ -34,7 +34,7 @@ namespace JsonFormatter
                 {
                     countSpaces.Append(" ");
                 }
-                PropertyInfo[] props = tree.Data.GetType()
+                var props = tree.Data.GetType()
                     .GetProperties(BindingFlags.Public | BindingFlags.Instance);
                 result.Append("\r\n");
                 result.Append(countSpaces);
@@ -44,9 +44,9 @@ namespace JsonFormatter
                 result.Append(countSpaces);
                 foreach (var prop in props)
                 {
-                    Type currentType = prop.PropertyType;
+                    var currentType = prop.PropertyType;
                     var itemValue = prop.GetValue(tree.Data, null);
-                    bool prim = currentType.IsPrimitive;
+                    var prim = currentType.IsPrimitive;
                     result.AppendFormat("\r\n");
                     result.Append(countSpaces.ToString());
                     result.AppendFormat(prop.PropertyType.Name.Equals("Int32")

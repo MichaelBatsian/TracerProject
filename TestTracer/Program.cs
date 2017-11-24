@@ -15,18 +15,17 @@ namespace TestTracer
 
         static void Main(string[] args)
         {
-            bool run = true;
-            bool first = true;
+            var run = true;
+            var first = true;
             var p = new Program();
             p.RunTestMethods();
 
             while (run)
             {
-                string line =Console.ReadLine();
+                var line =Console.ReadLine();
                 var inputArgs = first ? args : line.Split(' ');
                 p.ConsoleInterface(inputArgs);
                 Console.WriteLine("Continue y/n?");
-                Console.WriteLine();
                 if (Console.ReadLine().Equals("n"))
                 {
                     run = false;
@@ -45,7 +44,7 @@ namespace TestTracer
 
         public void ConsoleInterface(string[] args)
         {
-            FormatResult<TracedMethodInfo> result = new FormatResult<TracedMethodInfo>(tracer.GetTree(), tracer);
+            var result = new FormatResult<TracedMethodInfo>(tracer.GetTree(), tracer);
             var plugins = result.GetPlugins();
             var formatsNames = result.GetFormatsNames(plugins);
             if (args.Length > 0)
@@ -64,6 +63,7 @@ namespace TestTracer
                             if (outputParams.Length == 1 && outputParams[0].Equals("console"))
                             {
                                 result.ToConsole();
+                                Console.WriteLine("Done.");
                                 break;
                             }
                             if (outputParams.Length == 3 && outputParams[1].Equals("--o"))
@@ -71,7 +71,9 @@ namespace TestTracer
                                 if (result.ToSpecialFormat(plugins, outputParams[0], outputParams[2]) == null)
                                 {
                                     DefaultErrorView();
+                                    break;
                                 }
+                                Console.WriteLine("Done.");
                                 break;
                             }
                         }
@@ -83,7 +85,7 @@ namespace TestTracer
                         break;
                     case "--h":
                         Console.WriteLine("--f - format to introduce tracer results");
-                        Console.WriteLine("--f [format] --o [path\file name] - set the path to output in file");
+                        Console.WriteLine("--f [format] --o [path\\file name] - set the path to output in file");
                         Console.WriteLine("formats:");
                         foreach (var name in formatsNames)
                         {

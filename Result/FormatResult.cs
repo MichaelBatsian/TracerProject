@@ -59,14 +59,14 @@ namespace Result
                     result = formatName;
                     break;
                 default:
-                    string pathToPlugins = FormatResult<T>.GetAbsolutePath("Plugins");
+                    var pathToPlugins = FormatResult<T>.GetAbsolutePath("Plugins");
                     if (plugins.Count == 0)
                     {
                         break;
                     }
                     foreach (var plugin in plugins)
                     {
-                        Type type = plugin.GetType();
+                        var type = plugin.GetType();
                         if (type.Name.ToLower().Contains(formatName))
                         {
                             plugin.Format(_tree, _tracer, 0, true, output);
@@ -80,7 +80,7 @@ namespace Result
 
         public List<string> GetFormatsNames(ICollection<IFormatter<T>> plugins)
         {
-            List<string> names = new List<string> {"xml"};
+            var names = new List<string> {"xml"};
             foreach (var plugin in plugins)
             {
                 if (plugin.GetType().Name.Contains("Json"))
@@ -114,9 +114,9 @@ namespace Result
 
         public static string GetAbsolutePath(string relativePath)
         {
-            string assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string[] path = assemblyPath.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
-            string[] newPath = new string[path.Length - 3];
+            var assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var path = assemblyPath.Split(new string[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
+            var newPath = new string[path.Length - 3];
             Array.Copy(path, newPath, path.Length - 3);
             return String.Join("\\", newPath) + relativePath;
         }

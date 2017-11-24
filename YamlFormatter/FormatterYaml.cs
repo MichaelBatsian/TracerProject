@@ -13,7 +13,7 @@ namespace YamlFormatter
 
         public void Format(TreeNode<T> tree,ITracer tracer, int level, bool isRoot, string savePath)
         {
-            StringBuilder result = new StringBuilder("root:");
+            var result = new StringBuilder("root:");
             GetYaml(tree, 0, true, result);
             Save(result, savePath);
         }
@@ -32,7 +32,7 @@ namespace YamlFormatter
                     countSpaces.Append("   ");
                 }
 
-                PropertyInfo[] props = tree.Data.GetType()
+                var props = tree.Data.GetType()
                     .GetProperties(BindingFlags.Public | BindingFlags.Instance);
                 result.Append("\r\n");
                 result.Append(countSpaces);
@@ -40,7 +40,7 @@ namespace YamlFormatter
 
                 foreach (var prop in props)
                 {
-                    Type currentType = prop.PropertyType;
+                    var currentType = prop.PropertyType;
                     var itemValue = prop.GetValue(tree.Data, null);
                     result.AppendFormat("\r\n");
                     result.Append(countSpaces.ToString());

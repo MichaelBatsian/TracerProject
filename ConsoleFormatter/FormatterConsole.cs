@@ -11,11 +11,11 @@ namespace ConsoleFormatter
     {
         public void Format(TreeNode<T> tree, ITracer tracer, int level, bool isRoot, string savePath)
         {
-            StringBuilder result = new StringBuilder();
+            var result = new StringBuilder();
             Traverse(tree, level,true,result);
             result.Append(Environment.NewLine);
             result.AppendFormat(
-                $"ThreadId {tracer.GetTraceResult().ThreadId} Executing time {tracer.GetTraceResult()}");
+                $"ThreadId {tracer.GetTraceResult().ThreadId} Executing time {tracer.GetTraceResult().ThreadTime}");
             if (savePath != null)
             {
                 Save(result.ToString(),savePath);
