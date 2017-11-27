@@ -49,14 +49,21 @@ namespace TracerLib.TracerImpl
         public void StopTrace()
         {
             var st = new StackTrace();
-            var invokationFrame = (st.GetFrames())[1];
+            var invokationFrame = (st.GetFrames())?[1];
             var info = _methodsStack.Pop().Data;
-            info.ClassName = invokationFrame.GetMethod().DeclaringType.Name;
-            info.MethodName = invokationFrame.GetMethod().Name;
-            info.ParamCountInMethod = invokationFrame
-                .GetMethod()
-                .GetParameters()
-                .Count();
+            if (invokationFrame != null)
+            {
+                var declaringType = invokationFrame.GetMethod().DeclaringType;
+                if (declaringType != null)
+                {
+                    info.ClassName = declaringType.Name;
+                }
+                info.MethodName = invokationFrame.GetMethod().Name;
+                info.ParamCountInMethod = invokationFrame
+                    .GetMethod()
+                    .GetParameters()
+                    .Count();
+            }
             info.Time.Stop();
             _current = _methodsStack.Count == 0 ? _tree : _methodsStack.Peek();
         }
