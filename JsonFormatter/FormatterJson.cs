@@ -84,12 +84,7 @@ namespace JsonFormatter
             result.AppendFormat($"{Environment.NewLine}{countSpaces} ]");
         }
 
-        private void GetJson2(TreeNode<T> tree, int level, bool isRoot, StringBuilder result)
-        {
-
-        }
-
-        private void Save(StringBuilder obj, string savePath)
+    private void Save(StringBuilder obj, string savePath)
         {
             using (var sw = new StreamWriter(savePath))
             {
