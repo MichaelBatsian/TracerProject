@@ -44,6 +44,10 @@
     <Compile Include="FormatResult.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ConsoleFormatter\ConsoleFormatter.csproj">
+      <Project>{0c55a315-29cb-47cf-8fab-c6e8b81c9ad8}</Project>
+      <Name>ConsoleFormatter</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FormatterContract\FormatterContract.csproj">
       <Project>{c84d1076-d772-401f-9484-cd349dd8b1c9}</Project>
       <Name>FormatterContract</Name>

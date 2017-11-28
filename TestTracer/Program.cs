@@ -1,28 +1,38 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
+using System.Linq;
 using System.Threading;
-using FormatterContract;
 using TracerLib.TracerImpl;
-using  Result;
+using Result;
 using TracerLib.Model;
 
 
 namespace TestTracer
 {
-    class Program
+    public class Program
     {
         private static Tracer tracer = Tracer.GetInstance();
 
-        [STAThread]
         static void Main(string[] args)
         {
+            var run = true;
+            var first = true;
             var p = new Program();
             p.RunTestMethods();
-            //p.ConsoleInterface(args);
-            FormatResult<TracedMethodInfo> result = new FormatResult<TracedMethodInfo>(tracer.GetTree(), tracer);
-            Console.ReadKey();
+
+            while (run)
+            {
+                var line =Console.ReadLine();
+                var inputArgs = first ? args : line.Split(' ');
+                p.ConsoleInterface(inputArgs);
+                Console.WriteLine("Continue y/n?");
+                if (Console.ReadLine().Equals("n"))
+                {
+                    run = false;
+                }
+                first = false;
+                Console.WriteLine("Enter command:");
+            }
         }
 
         private void RunTestMethods()
@@ -32,70 +42,9 @@ namespace TestTracer
             MethodLevel2(5,3);
         }
 
-        public void ConsoleInterface(string [] args)
+        public void ConsoleInterface(string[] args)
         {
-            FormatResult<TracedMethodInfo> result = new FormatResult<TracedMethodInfo>(tracer.GetTree(),tracer);
-            if (args.Length > 0)
-            {
-                switch (args[0])
-                {
-                    case "--f":
-                        bool exit = true;
-                        while (exit)
-                        {
-                            Console.WriteLine("Choose format:");
-                            Console.WriteLine("1 - console view");
-                            Console.WriteLine("2 - xml format");
-                            Console.WriteLine("3 - json");
-                            Console.WriteLine("4 - yaml");
-                            Console.WriteLine("5 - exit");
-                            string format = Console.ReadLine();
-                            switch (format)
-                            {
-                                case "1":
-                                    result.ToConsole();
-                                    Console.WriteLine("Done.");
-                                    break;
-                                case "2":
-                                    result.ToXml();
-                                    Console.WriteLine("Done.");
-                                    break;
-                                case "3":
-                                    result.ToJson();
-                                    Console.WriteLine("Done.");
-                                    break;
-                                case "4":
-                                    result.ToYaml();
-                                    Console.WriteLine("Done.");
-                                    break;
-                                case "5":
-                                    exit = false;
-                                    break;
-                                default:
-                                    Console.WriteLine("Choose right command");
-                                break;
-                            }
-                        }
-                        break;
-                    case "--h":
-                        Console.WriteLine("--f - format to introduce tracer results");
-                        Console.WriteLine("results:");
-                        Console.WriteLine("1-console view");
-                        Console.WriteLine("2-xml format");
-                        Console.WriteLine("3-json");
-                        Console.WriteLine("4-json");
-                        break;
-                    default:
-                        Console.WriteLine("This command is not defined for this application.");
-                        Console.WriteLine("To view the list of commands choose key --h");
-                        break;
-                }
-            }
-        }
-
-        public void ConsoleInterface2(string[] args)
-        {
-            FormatResult<TracedMethodInfo> result = new FormatResult<TracedMethodInfo>(tracer.GetTree(), tracer);
+            var result = new FormatResult<TracedMethodInfo>(tracer.GetTree(), tracer);
             var plugins = result.GetPlugins();
             var formatsNames = result.GetFormatsNames(plugins);
             if (args.Length > 0)
@@ -103,12 +52,36 @@ namespace TestTracer
                 switch (args[0])
                 {
                     case "--f":
-                        string format = Console.ReadLine();
-                        result.ToSpecialFormat(plugins, format);
-                        if (args.Length == 4)
+                        string[] outputParams = args.Skip(1).Take(3).ToArray();
+                        if (outputParams.Length==0)
                         {
-                            
+                            DefaultErrorView();
+                            break;
                         }
+                        try
+                        {
+                            if (outputParams.Length == 1 && outputParams[0].Equals("console"))
+                            {
+                                result.ToConsole();
+                                Console.WriteLine("Done.");
+                                break;
+                            }
+                            if (outputParams.Length == 3 && outputParams[1].Equals("--o"))
+                            {
+                                if (result.ToSpecialFormat(plugins, outputParams[0], outputParams[2]) == null)
+                                {
+                                    DefaultErrorView();
+                                    break;
+                                }
+                                Console.WriteLine("Done.");
+                                break;
+                            }
+                        }
+                        catch (DirectoryNotFoundException)
+                        {
+                            Console.WriteLine("Wrong way to save  file");
+                        }
+                        DefaultErrorView();
                         break;
                     case "--h":
                         Console.WriteLine("--f - format to introduce tracer results");
@@ -120,12 +93,18 @@ namespace TestTracer
                         }
                         break;
                     default:
-                        Console.WriteLine("This command is not defined for this application.");
-                        Console.WriteLine("To view the list of commands choose key --h");
+                        DefaultErrorView();
                         break;
                 }
             }
         }
+
+        public void DefaultErrorView()
+        {
+            Console.WriteLine("Wrong command or format.");
+            Console.WriteLine("To view the list of commands choose key --h");
+        }
+
         /* Methods to test tracer work*/
         public void MethodLevel1()
         {

@@ -6,20 +6,22 @@ using System.Reflection;
 using System.Windows.Forms;
 using System.IO;
 using TracerLib.TracerContract;
+using System.Diagnostics;
 
 namespace JsonFormatter
 {
     public class FormatterJson<T>:IFormatter<T>
     {
 
-        public void Format(TreeNode<T> tree,ITracer tracer, int level, bool isRoot)
+        public void Format(TreeNode<T> tree,ITracer tracer, int level, bool isRoot,string  savePath)
         {
-            StringBuilder result = new StringBuilder("{\r\n \"root\": [\r\n  {");
+            var result = new StringBuilder("{");
+            result.AppendFormat($"{Environment.NewLine} \"root\": [{Environment.NewLine}");
+            result.Append("  {");
             GetJson(tree, 0, true, result);
-            result.Append("\r\n]\r\n}");
-            Save(result);
-
-            
+            //result.Append($"{Environment.NewLine}]{Environment.NewLine}");
+            result.Append("}");
+            Save(result, savePath);
         }
 
         private void GetJson(TreeNode<T> tree, int level, bool isRoot,StringBuilder result)
@@ -36,54 +38,55 @@ namespace JsonFormatter
                 {
                     countSpaces.Append(" ");
                 }
-                PropertyInfo[] props = tree.Data.GetType()
+                var props = tree.Data.GetType()
                     .GetProperties(BindingFlags.Public | BindingFlags.Instance);
-                result.Append("\r\n");
+                if (level >0 && result.Length>20)
+                {
+                    result.Append(",");
+                }
+                result.Append(Environment.NewLine);
                 result.Append(countSpaces);
                 result.Append(" \"Method\":[");
-                result.AppendFormat("\r\n{0}", countSpaces);
+                result.AppendFormat($"{Environment.NewLine}{countSpaces}");
                 result.Append(" {");
                 result.Append(countSpaces);
-                foreach (var prop in props)
+
+                for (int i = 0; i < props.Length; i++)
                 {
-                    Type currentType = prop.PropertyType;
-                    var itemValue = prop.GetValue(tree.Data, null);
-                    bool prim = currentType.IsPrimitive;
-                    result.AppendFormat("\r\n");
+                    var currentType = props[i].PropertyType;
+
+                    var itemValue = props[i].GetValue(tree.Data, null);
+                    if (props[i].PropertyType.Name.Equals("Stopwatch"))
+                    {
+                        var sw = (Stopwatch)props[i].GetValue(tree.Data, null);
+                        itemValue = sw.ElapsedMilliseconds;
+                    }
+                    result.Append(Environment.NewLine);
                     result.Append(countSpaces.ToString());
-                    result.AppendFormat(prop.PropertyType.Name.Equals("Int32")
-                        ||prop.PropertyType.Name.Equals("Double")
-                        ||prop.PropertyType.Name.Equals("Single")
-                        ||prop.PropertyType.Name.Equals("Decimal") ? "  \"{0}\": {1}" : "  \"{0}\": \"{1}\"", prop.Name,
+                    result.AppendFormat(props[i].PropertyType.Name.Equals("Int32")
+                                        || props[i].PropertyType.Name.Equals("Double")
+                                        || props[i].PropertyType.Name.Equals("Single")
+                                        || props[i].PropertyType.Name.Equals("Decimal") ? "  \"{0}\": {1}" : "  \"{0}\": \"{1}\"", props[i].Name,
                         itemValue);
+                    if (i != props.Length - 1)
+                    {
+                        result.Append(",");
+                    }
                 }
-                
             }
-        
             level++;
             foreach (var kid in tree.Children)
             {
                 GetJson(kid, level, false,result);
             }
-            result.AppendFormat("\r\n{0}",countSpaces);
-            result.Append(" },");
-
-            result.AppendFormat("\r\n{0} ]",countSpaces);
+            result.AppendFormat($"{Environment.NewLine}{countSpaces}");
+            result.Append(" }");
+            result.AppendFormat($"{Environment.NewLine}{countSpaces} ]");
         }
 
-        private void Save(StringBuilder obj)
+    private void Save(StringBuilder obj, string savePath)
         {
-            SaveFileDialog saveFileDial = new SaveFileDialog
-            {
-                Filter = "Json Files (*.json)|*.json|All Files (*.*)|*.*",
-                FileName = "Json"
-            };
-
-            if (saveFileDial.ShowDialog() != DialogResult.OK)
-            {
-                return;
-            }
-            using (var sw = new StreamWriter(saveFileDial.FileName))
+            using (var sw = new StreamWriter(savePath))
             {
                 sw.Write(obj.ToString());
             }

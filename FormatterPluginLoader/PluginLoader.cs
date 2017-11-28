@@ -11,14 +11,14 @@ namespace FormatterPluginLoader
     {
         public static IFormatter<T> LoadPlugin<T>(string path)
         {
-            FileInfo file = new FileInfo(path);
-            Type interfaceType = typeof(IFormatter<>);
+            var file = new FileInfo(path);
+            var interfaceType = typeof(IFormatter<>);
             Type pluginType = null;
             if (file.Exists)
             {
-                AssemblyName an = AssemblyName.GetAssemblyName(file.FullName);
-                Assembly assembly = Assembly.Load(an);
-                Type[] types = assembly.GetTypes();
+                var an = AssemblyName.GetAssemblyName(file.FullName);
+                var assembly = Assembly.Load(an);
+                var types = assembly.GetTypes();
                 foreach (var type in types)
                 {
                     if (type.IsInterface || type.IsAbstract)
@@ -50,23 +50,23 @@ namespace FormatterPluginLoader
             {
                 dllFileNames = Directory.GetFiles(path, "*.dll");
 
-                ICollection<Assembly> assemblies = new List<Assembly>(dllFileNames.Length);
+                var assemblies = new List<Assembly>(dllFileNames.Length);
                 foreach (string dllFile in dllFileNames)
                 {
-                    AssemblyName an = AssemblyName.GetAssemblyName(dllFile);
-                    Assembly assembly = Assembly.Load(an);
+                    var an = AssemblyName.GetAssemblyName(dllFile);
+                    var assembly = Assembly.Load(an);
                     assemblies.Add(assembly);
                 }
 
-                Type pluginType = typeof(IFormatter<>);
-                ICollection<Type> pluginTypes = new List<Type>();
-                foreach (Assembly assembly in assemblies)
+                var pluginType = typeof(IFormatter<>);
+                var pluginTypes = new List<Type>();
+                foreach (var assembly in assemblies)
                 {
                     if (assembly != null)
                     {
-                        Type[] types = assembly.GetTypes();
+                        var types = assembly.GetTypes();
 
-                        foreach (Type type in types)
+                        foreach (var type in types)
                         {
                             if (type.IsInterface || type.IsAbstract)
                             {
@@ -83,11 +83,11 @@ namespace FormatterPluginLoader
                     }
                 }
 
-                ICollection<IFormatter<T>> plugins = new List<IFormatter<T>>(pluginTypes.Count);
+                var plugins = new List<IFormatter<T>>(pluginTypes.Count);
                 foreach (Type type in pluginTypes)
                 {
-                    var t = pluginType.MakeGenericType(typeof(T));
-                    IFormatter <T> plugin = (IFormatter <T>)Activator.CreateInstance(t);
+                    var t = type.MakeGenericType(typeof(T));
+                    var plugin = (IFormatter <T>)Activator.CreateInstance(t);
                     plugins.Add(plugin);
                 }
                 return plugins;
